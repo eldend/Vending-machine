@@ -20,7 +20,6 @@ public:
 
     int money{0};// int money = 10;
     void increase_money(int value);
-    void button_disabled();
     void button_enabled();
     void Reset();
 
