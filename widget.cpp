@@ -7,7 +7,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    button_disabled();
+    button_enabled();
 }
 
 Widget::~Widget()
@@ -16,17 +16,11 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::button_disabled(){
-    ui->pbReset->setEnabled(false);
-    ui->pbcoffee->setEnabled(false);
-    ui->pbmilk->setEnabled(false);
-    ui->pbtea->setEnabled(false);
-}
 void Widget::button_enabled(){
     ui->pbReset->setEnabled(0 < money);
     ui->pbcoffee->setEnabled(100 <= money);
     ui->pbmilk->setEnabled(150 <= money);
-    ui->pbtea->setEnabled(200<= money);
+    ui->pbtea->setEnabled(200 <= money);
 }
 void Widget::increase_money(int value){
     money += value;
@@ -37,38 +31,19 @@ void Widget::Reset(){
     int values[] = {500, 100, 50, 10};
     int num[] = {0, 0, 0, 0};
     int temp = money;
-
-    for (int i = 0; i < 4; ++i) {
+    QString msg;
+    for (int i = 0; i < sizeof(values)/sizeof(int); ++i) {
         num[i] = temp / values[i];
         temp %= values[i];
+        if (money >= values[i]) {
+            msg = msg.append(QString("%1: %2\n").arg(values[i]).arg(num[i]));
+            money -= num[i] * values[i];
+        }
     }
-
-    QString msg;
-    QStringList parts;
-
-    if (money >= 500) {
-        parts.append(QString("500: %1").arg(num[0]));
-        money -= num[0] * 500;
-    }
-    if (money >= 100) {
-        parts.append(QString("100: %1").arg(num[1]));
-        money -= num[1] * 100;
-    }
-    if (money >= 50) {
-        parts.append(QString("50: %1").arg(num[2]));
-        money -= num[2] * 50;
-    }
-    if (money >= 10) {
-        parts.append(QString("10: %1").arg(num[3]));
-        money -= num[3] * 10;
-    }
-
-    msg = parts.join("\n");
-
     QMessageBox mb;
     mb.information(this, "change", msg);
-    money = 0;
-    ui->lcdNumber->display(money);
+    Q_ASSERT(money==0);
+    button_enabled();
 }
 
 void Widget::on_pb10_clicked()
