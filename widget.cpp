@@ -42,6 +42,7 @@ void Widget::Reset(){
     }
     QMessageBox mb;
     mb.information(this, "change", msg);
+    money = 0
     Q_ASSERT(money==0);
     button_enabled();
 }
